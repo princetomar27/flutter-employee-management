@@ -29,6 +29,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       (user) async {
         final userData = jsonEncode(user.toJson());
         await StorageHelper.saveUserData(userData);
+        await StorageHelper.saveLastLoginTime();
       },
     );
     return result;

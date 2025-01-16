@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/colors/app_colors.dart';
-import '../../../../core/constants/input_formatters.dart';
+import '../../../../core/constants/navigation_constants.dart';
 import '../../../../core/injector/injection_container.dart';
 import '../../../../presentation/paddings.dart';
+import '../../../home/presentation/screen/home_screen.dart';
 import '../cubit/authentication_cubit.dart';
 
 class AuthenticationScreen extends StatefulWidget {
@@ -49,7 +50,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           color: AppColors.textPrimaryColor,
                         ),
                       ),
-                      inputFormatters: digitsInputFormatter,
                       onChanged: cubit.updateUserName,
                     ),
                     padding16,
@@ -87,10 +87,8 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                       onPressed: () {
                         if (cubit.loginFormKey.currentState!.validate()) {
                           cubit.login(onLoginSuccess: () {
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Scaffold()));
+                            NavigationHelper.replaceWith(
+                                context, const HomeScreen());
                           });
                         }
                       },
@@ -109,6 +107,46 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           : const Text(
                               "Login",
                             ),
+                    ),
+                    const SizedBox(height: 24.0),
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 16),
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text("Forgot Password"),
+                                content: SingleChildScrollView(
+                                  child: Column(
+                                    children: [
+                                      const Text("It'll be implemented later"),
+                                      const SizedBox(height: 24.0),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          NavigationHelper.goBack(context);
+                                        },
+                                        child: const Text("OKAY"),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                        child: const Text(
+                          "Forgot Password",
+                          textAlign: TextAlign.end,
+                          style: TextStyle(
+                            color: AppColors.textSecondaryColor,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
