@@ -24,8 +24,11 @@ class AuthenticationDatasourceImpl implements AuthenticationDatasource {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-
-        return right(UserLoginEntity.fromJson(data));
+        if (data['status'] == 1) {
+          return right(UserLoginEntity.fromJson(data));
+        } else {
+          return left(UserNotExistFailure(message: data['message']));
+        }
       } else {
         return Left(ServerFailure(
             message: 'Login failed with status code: ${response.statusCode}'));

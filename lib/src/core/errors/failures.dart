@@ -14,3 +14,11 @@ class ServerFailure extends Failure {
   @override
   List<Object?> get props => [message];
 }
+
+class PermissionFailure extends Failure {
+  const PermissionFailure({required super.message});
+}
+
+class UserNotExistFailure extends Failure {
+  const UserNotExistFailure({super.message = 'Invalid credentials'});
+}

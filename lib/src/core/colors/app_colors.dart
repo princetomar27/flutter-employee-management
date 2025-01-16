@@ -6,6 +6,7 @@ class AppColors {
   static const Color secondaryColor = Color(0xFF00B3B8);
 
   static const Color textPrimaryColor = Color(0xFF000000);
+  static const Color borderColor = Color(0xFF000000);
   static const Color textSecondaryColor = Color.fromARGB(255, 255, 255, 255);
 
   static const Color backgroundColor = Color(0xFFF5F5F5);
