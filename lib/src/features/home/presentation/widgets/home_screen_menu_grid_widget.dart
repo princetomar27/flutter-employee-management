@@ -25,7 +25,7 @@ class HomeScreenMenuGridWidget extends StatelessWidget {
 
         return GridView.count(
           crossAxisCount: columnCount,
-          childAspectRatio: 1,
+          childAspectRatio: 0.8,
           children: cardItems,
         );
       },
