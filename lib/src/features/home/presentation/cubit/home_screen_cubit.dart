@@ -3,9 +3,13 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 
+import '../../../../core/errors/failures.dart';
 import '../../../../core/storage/storage_helper.dart';
 import '../../../authentication/data/entities/user_login_entity.dart';
+import '../../data/entities/check_in_params.dart';
+import '../../data/entities/check_out_params.dart';
 import '../../data/entities/location_entity.dart';
 import '../../data/repository/home_repository.dart';
 
@@ -18,8 +22,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
 
   HomeScreenCubit({
     required this.homeRepository,
-  }) : super(HomeScreenState(
-          currentDateTime: DateTime.now(),
+  }) : super(HomeScreenInitial(
           userProfile: null,
           isCheckedIn: false,
         )) {
@@ -34,7 +37,6 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
 
   void _initialize() {
     _startDateTimeUpdater();
-    fetchUserProfile();
     loadHomeScreenData();
   }
 
@@ -53,50 +55,126 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     locationResult.fold(
       (failure) => emit(HomeScreenFailure(
           currentDateTime: DateTime.now(),
-          message: failure.message,
+          failure: failure,
           isCheckedIn: state.isCheckedIn)),
-      (location) => emit(
-        HomeScreenLoaded(
-          currentDateTime: DateTime.now(),
-          location: location,
-          userProfile: state.userProfile,
-          isCheckedIn: state.isCheckedIn,
-        ),
-      ),
-    );
-  }
+      (location) {
+        emit(
+          HomeScreenLoaded(
+            currentDateTime: DateTime.now(),
+            location: location,
+            userProfile: state.userProfile,
+            isCheckedIn: state.isCheckedIn,
+          ),
+        );
 
-  void toggleCheckIn(bool value) {
-    print("API called: Check-In status is now $value");
-
-    emit(
-      state.copyWith(
-        currentDateTime: DateTime.now(),
-        isCheckedIn: value,
-        userProfile: state.userProfile,
-      ),
+        fetchUserProfile();
+      },
     );
   }
 
   Future<void> fetchUserProfile() async {
-    final userData = await StorageHelper.getUserData();
-    if (userData != null) {
-      final user = UserLoginEntity.fromJson(jsonDecode(userData));
-      print(user);
-      emit(
-        HomeScreenState(
-          currentDateTime: DateTime.now(),
-          isCheckedIn: state.isCheckedIn,
-          userProfile: user,
-        ),
+    if (state is HomeScreenLoaded) {
+      final currentState = state as HomeScreenLoaded;
+      final userData = await StorageHelper.getUserData();
+      if (userData != null) {
+        final user = UserLoginEntity.fromJson(jsonDecode(userData));
+        print(user);
+        emit(
+          currentState.copyWith(
+            currentDateTime: DateTime.now(),
+            isCheckedIn: currentState.isCheckedIn,
+            userProfile: user,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> checkInUser() async {
+    if (state is HomeScreenLoaded) {
+      final currentState = state as HomeScreenLoaded;
+      CheckInParams checkInParams = CheckInParams(
+        userId: '${currentState.userProfile?.userId}',
+        latitude: '${currentState.location.latitude}',
+        longitude: '${currentState.location.longitude}',
+        location: currentState.location.address,
       );
-    } else {
-      emit(
-        HomeScreenState(
-          currentDateTime: DateTime.now(),
-          isCheckedIn: state.isCheckedIn,
-          userProfile: state.userProfile,
-        ),
+
+      final result = await homeRepository.checkInUser(checkInParams);
+      result.fold(
+        (failure) => null,
+        (checkInResult) {
+          StorageHelper.saveCheckInData(checkInResult);
+          if (checkInResult.status == 1) {
+            emit(
+              currentState.copyWith(
+                currentDateTime: DateTime.now(),
+                isCheckedIn: true,
+                userProfile: state.userProfile,
+              ),
+            );
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> checkOutUser() async {
+    if (state is HomeScreenLoaded) {
+      final currentState = state as HomeScreenLoaded;
+
+      // Fetch checkIn Data from storage helper
+      final checkedInData = await StorageHelper.getCheckInData();
+      if (checkedInData == null) {
+        return;
+      }
+
+      final checkInData = await StorageHelper.getCheckInData();
+
+      if (checkInData == null) {
+        return;
+      }
+
+      final userCurrentLocation = await homeRepository.getCurrentLocation();
+      double userDistance = 0;
+
+      userCurrentLocation.fold((l) => null, (currentLocation) {
+        double checkInLatitude = currentState.location.latitude;
+        double checkInLongitude = currentState.location.longitude;
+        double currentLatitude = currentLocation.latitude;
+        double currentLongitude = currentLocation.longitude;
+
+        double dist = Geolocator.distanceBetween(
+          checkInLatitude,
+          checkInLongitude,
+          currentLatitude,
+          currentLongitude,
+        );
+        userDistance = dist;
+      });
+
+      CheckOutParams checkOutParams = CheckOutParams(
+        userId: '${currentState.userProfile?.userId}',
+        latitude: '${currentState.location.latitude}',
+        longitude: '${currentState.location.longitude}',
+        location: currentState.location.address,
+        distance: userDistance,
+      );
+
+      final result = await homeRepository.checkOutUser(checkOutParams);
+      result.fold(
+        (failure) => null,
+        (checkOutResult) {
+          StorageHelper.clearUserCheckInData();
+
+          emit(
+            currentState.copyWith(
+              currentDateTime: DateTime.now(),
+              isCheckedIn: !currentState.isCheckedIn,
+              userProfile: state.userProfile,
+            ),
+          );
+        },
       );
     }
   }

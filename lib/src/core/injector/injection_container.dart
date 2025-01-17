@@ -19,7 +19,11 @@ Future<void> init() async {
   sl.registerLazySingleton<AuthenticationDatasource>(
       () => AuthenticationDatasourceImpl(apiClient: sl<ApiClient>()));
 
-  sl.registerLazySingleton<HomeDatasource>(() => HomeDatasourceImpl());
+  sl.registerLazySingleton<HomeDatasource>(
+    () => HomeDatasourceImpl(
+      apiClient: sl(),
+    ),
+  );
 
   // Repositories
   sl.registerLazySingleton<AuthenticationRepository>(

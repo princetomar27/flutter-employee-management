@@ -31,13 +31,11 @@ class UserLoginEntity extends Equatable {
       ];
 
   factory UserLoginEntity.fromJson(Map<String, dynamic> json) {
-    // Use safe access to avoid typecasting errors
     final loginData = json['login'] as List?;
     final message = json['message'] ?? 'Invalid Username & Password';
     final status = json['status'] ?? 0;
 
     if (loginData == null || loginData.isEmpty) {
-      // If 'login' is empty or null, return a default instance with error message
       return UserLoginEntity(
         userId: '',
         roleId: '',
@@ -49,7 +47,6 @@ class UserLoginEntity extends Equatable {
       );
     }
 
-    // Use safe extraction for data to avoid type errors
     final login = loginData.isNotEmpty ? loginData[0] : {};
 
     return UserLoginEntity(

@@ -63,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                 case HomeScreenLoading():
                   return const Center(
                     child: CircularProgressIndicator(
-                      color: AppColors.backgroundColor,
+                      color: AppColors.primaryColor,
                     ),
                   );
 
@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
 
                 case HomeScreenFailure():
                   return Center(
-                    child: Text("Failure : \n${state.message}"),
+                    child: Text("Failure : \n${state.failure.message}"),
                   );
 
                 default:

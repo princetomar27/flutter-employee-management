@@ -102,15 +102,18 @@ class _HomeScreenCardWidgetState extends State<HomeScreenCardWidget> {
                             ),
                       padding20,
                       BlocBuilder<HomeScreenCubit, HomeScreenState>(
-                        builder: (context, state) {
+                        builder: (context, crntState) {
+                          final cubit = context.read<HomeScreenCubit>();
                           return GestureDetector(
                             onTap: () {
-                              final currentValue = state is HomeScreenLoaded
+                              final currentValue = crntState is HomeScreenLoaded
                                   ? state.isCheckedIn
                                   : false;
-                              context
-                                  .read<HomeScreenCubit>()
-                                  .toggleCheckIn(!currentValue);
+                              if (currentValue == false) {
+                                cubit.checkInUser();
+                              } else {
+                                cubit.checkOutUser();
+                              }
                             },
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
@@ -122,13 +125,13 @@ class _HomeScreenCardWidgetState extends State<HomeScreenCardWidget> {
                                 border:
                                     Border.all(color: AppColors.borderColor),
                                 borderRadius: BorderRadius.circular(15),
-                                color: state is HomeScreenLoaded &&
+                                color: crntState is HomeScreenLoaded &&
                                         state.isCheckedIn
                                     ? Colors.green
                                     : Colors.red.shade800,
                               ),
                               child: Align(
-                                alignment: state is HomeScreenLoaded &&
+                                alignment: crntState is HomeScreenLoaded &&
                                         state.isCheckedIn
                                     ? Alignment.centerRight
                                     : Alignment.centerLeft,
@@ -137,7 +140,7 @@ class _HomeScreenCardWidgetState extends State<HomeScreenCardWidget> {
                                   height: 16.0,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: state is HomeScreenLoaded &&
+                                    color: crntState is HomeScreenLoaded &&
                                             state.isCheckedIn
                                         ? Colors.greenAccent
                                         : Colors.redAccent,

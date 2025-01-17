@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter/widgets.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../../../core/network/api_client.dart';
@@ -34,7 +35,7 @@ class AuthenticationDatasourceImpl implements AuthenticationDatasource {
             message: 'Login failed with status code: ${response.statusCode}'));
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
       return Left(ServerFailure(message: 'Login request failed: $e'));
     }
   }

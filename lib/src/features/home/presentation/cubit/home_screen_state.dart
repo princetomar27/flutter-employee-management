@@ -17,21 +17,27 @@ class HomeScreenState extends Equatable {
     bool? isCheckedIn,
   }) {
     return HomeScreenState(
-      currentDateTime: DateTime.now(),
-      userProfile: null,
-      isCheckedIn: false,
+      currentDateTime: currentDateTime ?? this.currentDateTime,
+      userProfile: userProfile ?? this.userProfile,
+      isCheckedIn: isCheckedIn ?? this.isCheckedIn,
     );
   }
 
   @override
-  List<Object?> get props => [currentDateTime];
+  List<Object?> get props => [
+        currentDateTime,
+        userProfile,
+        isCheckedIn,
+      ];
 }
 
 class HomeScreenInitial extends HomeScreenState {
-  HomeScreenInitial()
-      : super(
+  HomeScreenInitial({
+    required UserLoginEntity? userProfile,
+    required bool isCheckedIn,
+  }) : super(
           currentDateTime: DateTime.now(),
-          userProfile: null,
+          userProfile: userProfile,
           isCheckedIn: false,
         );
 
@@ -41,7 +47,10 @@ class HomeScreenInitial extends HomeScreenState {
     UserLoginEntity? userProfile,
     bool? isCheckedIn,
   }) {
-    return HomeScreenInitial();
+    return HomeScreenInitial(
+      userProfile: userProfile,
+      isCheckedIn: isCheckedIn ?? this.isCheckedIn,
+    );
   }
 }
 
@@ -82,7 +91,12 @@ class HomeScreenLoaded extends HomeScreenState {
         );
 
   @override
-  List<Object?> get props => super.props..add(location);
+  List<Object?> get props => [
+        location,
+        userProfile,
+        isCheckedIn,
+        currentDateTime,
+      ];
 
   @override
   HomeScreenLoaded copyWith({
@@ -101,12 +115,12 @@ class HomeScreenLoaded extends HomeScreenState {
 }
 
 class HomeScreenFailure extends HomeScreenState {
-  final String message;
+  final Failure failure;
 
   const HomeScreenFailure({
     required DateTime currentDateTime,
     UserLoginEntity? userProfile,
-    required this.message,
+    required this.failure,
     required bool isCheckedIn,
   }) : super(
           currentDateTime: currentDateTime,
@@ -115,19 +129,24 @@ class HomeScreenFailure extends HomeScreenState {
         );
 
   @override
-  List<Object?> get props => super.props..add(message);
+  List<Object?> get props => [
+        failure,
+        userProfile,
+        isCheckedIn,
+        currentDateTime,
+      ];
 
   @override
   HomeScreenFailure copyWith({
     DateTime? currentDateTime,
-    String? message,
+    Failure? failure,
     UserLoginEntity? userProfile,
     bool? isCheckedIn,
   }) {
     return HomeScreenFailure(
       currentDateTime: currentDateTime ?? this.currentDateTime,
       userProfile: userProfile,
-      message: message ?? this.message,
+      failure: failure ?? this.failure,
       isCheckedIn: isCheckedIn ?? this.isCheckedIn,
     );
   }

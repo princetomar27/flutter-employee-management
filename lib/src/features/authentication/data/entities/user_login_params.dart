@@ -17,8 +17,7 @@ class UserLoginParams implements APIRouter {
 
   @override
   Map<String, String>? get headers => {
-        'Content-Type':
-            'application/x-www-form-urlencoded', // This ensures form-data encoding
+        'Content-Type': 'application/x-www-form-urlencoded',
       };
 
   @override
