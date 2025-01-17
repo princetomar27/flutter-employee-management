@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'home_screen_menu_card_item_widget.dart';
@@ -25,7 +27,7 @@ class HomeScreenMenuGridWidget extends StatelessWidget {
 
         return GridView.count(
           crossAxisCount: columnCount,
-          childAspectRatio: 0.8,
+          childAspectRatio: Platform.isIOS ? 1 : 0.8,
           children: cardItems,
         );
       },
