@@ -9,7 +9,7 @@ class AppColors {
   static const Color borderColor = Color(0xFF000000);
   static const Color textSecondaryColor = Color.fromARGB(255, 255, 255, 255);
 
-  static const Color backgroundColor = Color(0xFFF5F5F5);
+  static const Color backgroundColor = Color.fromARGB(255, 255, 255, 255);
   static const Color scaffoldBackgroundColor = Colors.white;
 
   static const Color buttonColor = Color(0xFF00B3B8);
@@ -22,4 +22,7 @@ class AppColors {
 
   static const Color loginButtonColor = Color.fromRGBO(0, 98, 128, 1);
   static const Color greyColor = Colors.grey;
+  static Color homeAppBarProfileIconColor = Colors.amber.shade700;
+
+  static const Color attendanceTileColor = Color.fromRGBO(245, 245, 245, 1);
 }

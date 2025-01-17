@@ -5,6 +5,7 @@ import 'package:flutteremployeemanagement/src/features/authentication/presentati
 import 'package:flutteremployeemanagement/src/presentation/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'src/core/colors/app_colors.dart';
 import 'src/core/storage/storage_helper.dart';
 import 'src/features/home/presentation/screen/home_screen.dart';
 
@@ -57,7 +58,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const CircularProgressIndicator();
+      return const CircularProgressIndicator(
+        color: AppColors.backgroundColor,
+      );
     }
     return MaterialApp(
       title: 'Flutter Demo',

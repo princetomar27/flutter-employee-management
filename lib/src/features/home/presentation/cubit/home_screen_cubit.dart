@@ -78,7 +78,6 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       final userData = await StorageHelper.getUserData();
       if (userData != null) {
         final user = UserLoginEntity.fromJson(jsonDecode(userData));
-        print(user);
         emit(
           currentState.copyWith(
             currentDateTime: DateTime.now(),

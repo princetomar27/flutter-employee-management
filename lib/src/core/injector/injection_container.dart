@@ -1,6 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
+import '../../features/attendace/data/datasource/attendance_datasource.dart';
+import '../../features/attendace/data/repository/attendance_repository.dart';
 import '../../features/authentication/data/datasource/authentication_datasource.dart';
 import '../../features/authentication/data/repository/authentication_repository.dart';
 import '../../features/home/data/datasource/home_datasource.dart';
@@ -25,6 +27,12 @@ Future<void> init() async {
     ),
   );
 
+  sl.registerLazySingleton<AttendanceDatasource>(
+    () => AttendanceDatasourceImpl(
+      apiClient: sl(),
+    ),
+  );
+
   // Repositories
   sl.registerLazySingleton<AuthenticationRepository>(
     () => AuthenticationRepositoryImpl(
@@ -34,6 +42,12 @@ Future<void> init() async {
   sl.registerLazySingleton<HomeRepository>(
     () => HomeRepositoryImpl(
       homeDatasource: sl<HomeDatasource>(),
+    ),
+  );
+
+  sl.registerLazySingleton<AttendanceRepository>(
+    () => AttendanceRepositoryImpl(
+      attendanceDatasource: sl<AttendanceDatasource>(),
     ),
   );
 }

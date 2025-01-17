@@ -2,105 +2,184 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/colors/app_colors.dart';
+import '../../../../core/constants/navigation_constants.dart';
 import '../../../../core/injector/injection_container.dart';
 import '../../../../presentation/paddings.dart';
+import '../../../attendace/presentation/screens/attendance_screen.dart';
 import '../cubit/home_screen_cubit.dart';
 import '../widgets/home_screen_card_widget.dart';
+import '../widgets/home_screen_menu_card_item_widget.dart';
+import '../widgets/home_screen_menu_grid_widget.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late List<HomeScreenMenuCardItem> homeScreenMenuItems;
+
+  @override
+  void initState() {
+    super.initState();
+    homeScreenMenuItems = _createHomeScreenMenuItems();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.backgroundColor,
-          actions: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                IconButton(
-                  icon: const Icon(
-                    Icons.notifications_active_outlined,
-                    size: 36,
-                    color: AppColors.textPrimaryColor,
-                  ),
-                  onPressed: () {},
-                ),
-                Positioned(
-                  right: -4,
-                  top: 2,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: AppColors.errorColor,
-                      borderRadius: BorderRadius.circular(6),
+    return BlocProvider(
+      create: (_) => HomeScreenCubit(homeRepository: sl()),
+      child: BlocBuilder<HomeScreenCubit, HomeScreenState>(
+        builder: (context, state) {
+          return Scaffold(
+            backgroundColor: AppColors.backgroundColor,
+            appBar: AppBar(
+              backgroundColor: AppColors.backgroundColor,
+              actions: [
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    IconButton(
+                      icon: const Icon(
+                        Icons.notifications_active_outlined,
+                        size: 36,
+                        color: AppColors.textPrimaryColor,
+                      ),
+                      onPressed: () {},
                     ),
-                    child: const Text(
-                      '1',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
+                    Positioned(
+                      right: -4,
+                      top: 2,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: AppColors.errorColor,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        child: const Text(
+                          '1',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
+                padding20,
+                if (state is HomeScreenLoaded &&
+                    state.userProfile != null &&
+                    state.userProfile?.profileImage.isNotEmpty == true)
+                  Image.network(state.userProfile!.profileImage)
+                else
+                  Icon(
+                    Icons.account_circle,
+                    size: 44,
+                    color: AppColors.homeAppBarProfileIconColor,
+                  ),
+                padding20,
               ],
             ),
-            const SizedBox(
-              width: 20,
-            ),
-          ],
-        ),
-        body: BlocProvider(
-          create: (_) => HomeScreenCubit(
-            homeRepository: sl(),
-          ),
-          child: BlocBuilder<HomeScreenCubit, HomeScreenState>(
-            builder: (context, state) {
-              switch (state) {
-                case HomeScreenLoading():
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AppColors.primaryColor,
-                    ),
-                  );
-
-                case HomeScreenInitial():
-                  return const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
-                    child: Column(
-                      children: [
-                        padding14,
-                        HomeScreenCardWidget(),
-                      ],
-                    ),
-                  );
-
-                case HomeScreenLoaded():
-                  return const Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
-                    child: Column(
-                      children: [
-                        padding14,
-                        HomeScreenCardWidget(),
-                      ],
-                    ),
-                  );
-
-                case HomeScreenFailure():
-                  return Center(
-                    child: Text("Failure : \n${state.failure.message}"),
-                  );
-
-                default:
-                  return const SizedBox.shrink();
+            body: () {
+              if (state is HomeScreenLoading) {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primaryColor,
+                  ),
+                );
+              } else if (state is HomeScreenInitial) {
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
+                  child: Column(
+                    children: [
+                      padding14,
+                      HomeScreenCardWidget(),
+                    ],
+                  ),
+                );
+              } else if (state is HomeScreenLoaded) {
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
+                  child: Column(
+                    children: [
+                      padding14,
+                      const HomeScreenCardWidget(),
+                      padding20,
+                      Flexible(
+                        child: HomeScreenMenuGridWidget(
+                          cardItems: homeScreenMenuItems,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else if (state is HomeScreenFailure) {
+                return Center(
+                  child: Text("Failure : \n${state.failure.message}"),
+                );
+              } else {
+                return const SizedBox.shrink();
               }
-            },
-          ),
-        ));
+            }(),
+          );
+        },
+      ),
+    );
+  }
+
+  List<HomeScreenMenuCardItem> _createHomeScreenMenuItems() {
+    return [
+      HomeScreenMenuCardItem(
+        iconPath: Icons.edit_calendar_outlined,
+        onTap: () => () {},
+        title: 'Leave Management',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.calendar_month_outlined,
+        onTap: () =>
+            NavigationHelper.navigateTo(context, const AttendanceScreen()),
+        title: 'Attendance Management',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.home_outlined,
+        onTap: () {},
+        title: 'Work from Home',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.view_list_sharp,
+        onTap: () {},
+        title: 'Project Task',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.percent,
+        onTap: () {},
+        title: 'Performance',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.people_alt_outlined,
+        onTap: () {},
+        title: 'Shift Roster',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.person_4_outlined,
+        onTap: () {},
+        title: 'Employee Onboarding',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.settings_accessibility_rounded,
+        onTap: () {},
+        title: 'Recruitment & Hiring',
+      ),
+      HomeScreenMenuCardItem(
+        iconPath: Icons.travel_explore_outlined,
+        onTap: () {},
+        title: 'Travel & Expense',
+      ),
+    ];
   }
 }

@@ -40,18 +40,6 @@ class HomeScreenInitial extends HomeScreenState {
           userProfile: userProfile,
           isCheckedIn: false,
         );
-
-  @override
-  HomeScreenState copyWith({
-    DateTime? currentDateTime,
-    UserLoginEntity? userProfile,
-    bool? isCheckedIn,
-  }) {
-    return HomeScreenInitial(
-      userProfile: userProfile,
-      isCheckedIn: isCheckedIn ?? this.isCheckedIn,
-    );
-  }
 }
 
 class HomeScreenLoading extends HomeScreenState {
@@ -63,17 +51,6 @@ class HomeScreenLoading extends HomeScreenState {
           userProfile: null,
           isCheckedIn: false,
         );
-
-  @override
-  HomeScreenState copyWith({
-    DateTime? currentDateTime,
-    UserLoginEntity? userProfile,
-    bool? isCheckedIn,
-  }) {
-    return HomeScreenLoading(
-      timestamp,
-    );
-  }
 }
 
 class HomeScreenLoaded extends HomeScreenState {
