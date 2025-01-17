@@ -2,6 +2,7 @@ import '../../../../core/network/api_client.dart';
 
 class CheckOutParams implements APIRouter {
   final String userId;
+  final String checkInId;
   final String latitude;
   final String longitude;
   final String location;
@@ -9,6 +10,7 @@ class CheckOutParams implements APIRouter {
 
   CheckOutParams({
     required this.userId,
+    required this.checkInId,
     required this.latitude,
     required this.longitude,
     required this.location,
@@ -18,6 +20,7 @@ class CheckOutParams implements APIRouter {
   @override
   get body => {
         'userId': userId,
+        'checkInId': checkInId,
         'latitude': latitude,
         'longitude': longitude,
         'location': location,
@@ -30,7 +33,7 @@ class CheckOutParams implements APIRouter {
       };
 
   @override
-  String get path => '/checkIn.php';
+  String get path => '/checkOut.php';
 
   @override
   Map<String, String>? get queryParams => null;

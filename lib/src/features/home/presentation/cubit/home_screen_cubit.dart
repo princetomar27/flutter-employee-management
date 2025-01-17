@@ -155,6 +155,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
 
       CheckOutParams checkOutParams = CheckOutParams(
         userId: '${currentState.userProfile?.userId}',
+        checkInId: checkInData.checkInId,
         latitude: '${currentState.location.latitude}',
         longitude: '${currentState.location.longitude}',
         location: currentState.location.address,
