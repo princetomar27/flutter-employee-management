@@ -34,99 +34,72 @@ class _HomeScreenState extends State<HomeScreen> {
       child: BlocBuilder<HomeScreenCubit, HomeScreenState>(
         builder: (context, state) {
           return Scaffold(
-            backgroundColor: AppColors.backgroundColor,
-            appBar: AppBar(
               backgroundColor: AppColors.backgroundColor,
-              actions: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    IconButton(
-                      icon: const Icon(
-                        Icons.notifications_active_outlined,
-                        size: 36,
-                        color: AppColors.textPrimaryColor,
-                      ),
-                      onPressed: () {},
-                    ),
-                    Positioned(
-                      right: -4,
-                      top: 2,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: AppColors.errorColor,
-                          borderRadius: BorderRadius.circular(6),
+              appBar: AppBar(
+                backgroundColor: AppColors.backgroundColor,
+                actions: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      IconButton(
+                        icon: const Icon(
+                          Icons.notifications_active_outlined,
+                          size: 36,
+                          color: AppColors.textPrimaryColor,
                         ),
-                        child: const Text(
-                          '1',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                        onPressed: () {},
+                      ),
+                      Positioned(
+                        right: -4,
+                        top: 2,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: AppColors.errorColor,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Text(
+                            '1',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
+                      ),
+                    ],
+                  ),
+                  padding20,
+                  if (state is HomeScreenLoaded &&
+                      state.userProfile != null &&
+                      state.userProfile?.profileImage.isNotEmpty == true)
+                    Image.network(state.userProfile!.profileImage)
+                  else
+                    Icon(
+                      Icons.account_circle,
+                      size: 44,
+                      color: AppColors.homeAppBarProfileIconColor,
+                    ),
+                  padding20,
+                ],
+              ),
+              body: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
+                child: Column(
+                  children: [
+                    padding14,
+                    const HomeScreenCardWidget(),
+                    padding20,
+                    Flexible(
+                      child: HomeScreenMenuGridWidget(
+                        cardItems: homeScreenMenuItems,
                       ),
                     ),
                   ],
                 ),
-                padding20,
-                if (state is HomeScreenLoaded &&
-                    state.userProfile != null &&
-                    state.userProfile?.profileImage.isNotEmpty == true)
-                  Image.network(state.userProfile!.profileImage)
-                else
-                  Icon(
-                    Icons.account_circle,
-                    size: 44,
-                    color: AppColors.homeAppBarProfileIconColor,
-                  ),
-                padding20,
-              ],
-            ),
-            body: () {
-              if (state is HomeScreenLoading) {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: AppColors.primaryColor,
-                  ),
-                );
-              } else if (state is HomeScreenInitial) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
-                  child: Column(
-                    children: [
-                      padding14,
-                      HomeScreenCardWidget(),
-                    ],
-                  ),
-                );
-              } else if (state is HomeScreenLoaded) {
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16),
-                  child: Column(
-                    children: [
-                      padding14,
-                      const HomeScreenCardWidget(),
-                      padding20,
-                      Flexible(
-                        child: HomeScreenMenuGridWidget(
-                          cardItems: homeScreenMenuItems,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              } else if (state is HomeScreenFailure) {
-                return Center(
-                  child: Text("Failure : \n${state.failure.message}"),
-                );
-              } else {
-                return const SizedBox.shrink();
-              }
-            }(),
-          );
+              ));
         },
       ),
     );
@@ -134,9 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   List<HomeScreenMenuCardItem> _createHomeScreenMenuItems() {
     return [
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.edit_calendar_outlined,
-        onTap: () => () {},
         title: 'Leave Management',
       ),
       HomeScreenMenuCardItem(
@@ -145,39 +117,32 @@ class _HomeScreenState extends State<HomeScreen> {
             NavigationHelper.navigateTo(context, const AttendanceScreen()),
         title: 'Attendance Management',
       ),
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.home_outlined,
-        onTap: () {},
         title: 'Work from Home',
       ),
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.view_list_sharp,
-        onTap: () {},
         title: 'Project Task',
       ),
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.percent,
-        onTap: () {},
         title: 'Performance',
       ),
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.people_alt_outlined,
-        onTap: () {},
         title: 'Shift Roster',
       ),
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.person_4_outlined,
-        onTap: () {},
         title: 'Employee Onboarding',
       ),
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.settings_accessibility_rounded,
-        onTap: () {},
         title: 'Recruitment & Hiring',
       ),
-      HomeScreenMenuCardItem(
+      const HomeScreenMenuCardItem(
         iconPath: Icons.travel_explore_outlined,
-        onTap: () {},
         title: 'Travel & Expense',
       ),
     ];

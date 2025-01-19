@@ -18,149 +18,156 @@ class _HomeScreenCardWidgetState extends State<HomeScreenCardWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<HomeScreenCubit, HomeScreenState>(
       builder: (context, state) {
-        final adress = state is HomeScreenLoaded
+        final address = state is HomeScreenLoaded
             ? state.location.address
             : "Fetching Address";
 
         switch (state) {
           case HomeScreenLoading():
-            return const Center(
-              child: CircularProgressIndicator(
-                color: AppColors.backgroundColor,
-              ),
-            );
+            return _HomeScreenCardSubWidget(address: address);
 
           case HomeScreenLoaded():
-            return Container(
-              height: 200,
-              width: double.maxFinite,
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            return _HomeScreenCardSubWidget(address: address);
+          default:
+            return _HomeScreenCardSubWidget(address: address);
+        }
+      },
+    );
+  }
+}
+
+class _HomeScreenCardSubWidget extends StatelessWidget {
+  final String address;
+  const _HomeScreenCardSubWidget({super.key, required this.address});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<HomeScreenCubit, HomeScreenState>(
+      builder: (context, state) {
+        return Container(
+          height: 200,
+          width: double.maxFinite,
+          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+          decoration: BoxDecoration(
+            color: AppColors.primaryColor,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  const Text("Welcome to MIS"),
+                  padding8,
+                  Text(
+                    state.currentDateTime.toTimeFormat(),
+                    style: const TextStyle(fontSize: 28),
+                  ),
+                  padding20,
+                  Row(
                     children: [
-                      const Text("Welcome to MIS"),
-                      padding8,
+                      const Icon(
+                        Icons.access_time_sharp,
+                        size: 18,
+                      ),
+                      const SizedBox(width: 8),
                       Text(
-                        state.currentDateTime.toTimeFormat(),
-                        style: const TextStyle(fontSize: 28),
+                        '${state.currentDateTime.toDayOfWeek()}, ',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
                       ),
-                      padding20,
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.access_time_sharp,
-                            size: 18,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${state.currentDateTime.toDayOfWeek()}, ',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                          Text(
-                            state.currentDateTime.toFullDate(),
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        state.currentDateTime.toFullDate(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
                       ),
-                      padding8,
-                      _HomeScreenCardSubDetailsWidget(
-                        icon: Icons.location_on_rounded,
-                        title: "Location",
-                        value: adress,
-                      ),
-                      padding8,
-                      const _HomeScreenCardSubDetailsWidget(
-                        icon: Icons.login,
-                        title: "Check-In",
-                        value: "",
-                      )
                     ],
                   ),
-                  Column(
-                    children: [
-                      padding48,
-                      state.userProfile != null &&
-                              state.userProfile?.profileImage.isNotEmpty == true
-                          ? Image.network(state.userProfile!.profileImage)
-                          : const Icon(
-                              Icons.account_circle,
-                              size: 50,
-                              color: AppColors.backgroundColor,
-                            ),
-                      padding20,
-                      BlocBuilder<HomeScreenCubit, HomeScreenState>(
-                        builder: (context, crntState) {
-                          final cubit = context.read<HomeScreenCubit>();
-                          return GestureDetector(
-                            onTap: () {
-                              final currentValue = crntState is HomeScreenLoaded
-                                  ? state.isCheckedIn
-                                  : false;
-                              if (currentValue == false) {
-                                cubit.checkInUser();
-                              } else {
-                                cubit.checkOutUser();
-                              }
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              curve: Curves.easeInOut,
-                              width: 50.0,
-                              height: 30.0,
-                              padding: const EdgeInsets.all(4.0),
-                              decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: AppColors.borderColor),
-                                borderRadius: BorderRadius.circular(15),
-                                color: crntState is HomeScreenLoaded &&
-                                        state.isCheckedIn
-                                    ? Colors.green
-                                    : Colors.red.shade800,
-                              ),
-                              child: Align(
-                                alignment: crntState is HomeScreenLoaded &&
-                                        state.isCheckedIn
-                                    ? Alignment.centerRight
-                                    : Alignment.centerLeft,
-                                child: Container(
-                                  width: 16.0,
-                                  height: 16.0,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: crntState is HomeScreenLoaded &&
-                                            state.isCheckedIn
-                                        ? Colors.greenAccent
-                                        : Colors.redAccent,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        },
-                      )
-                    ],
+                  padding8,
+                  _HomeScreenCardSubDetailsWidget(
+                    icon: Icons.location_on_rounded,
+                    title: "Location",
+                    value: address,
                   ),
+                  padding8,
+                  const _HomeScreenCardSubDetailsWidget(
+                    icon: Icons.login,
+                    title: "Check-In",
+                    value: "",
+                  )
                 ],
               ),
-            );
-
-          default:
-        }
-
-        return const SizedBox.shrink();
+              Column(
+                children: [
+                  padding48,
+                  state.userProfile != null &&
+                          state.userProfile?.profileImage.isNotEmpty == true
+                      ? Image.network(state.userProfile!.profileImage)
+                      : const Icon(
+                          Icons.account_circle,
+                          size: 50,
+                          color: AppColors.backgroundColor,
+                        ),
+                  padding20,
+                  BlocBuilder<HomeScreenCubit, HomeScreenState>(
+                    builder: (context, crntState) {
+                      final cubit = context.read<HomeScreenCubit>();
+                      return GestureDetector(
+                        onTap: () {
+                          final currentValue = crntState is HomeScreenLoaded
+                              ? state.isCheckedIn
+                              : false;
+                          if (currentValue == false) {
+                            cubit.checkInUser();
+                          } else {
+                            cubit.checkOutUser();
+                          }
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          curve: Curves.easeInOut,
+                          width: 50.0,
+                          height: 30.0,
+                          padding: const EdgeInsets.all(4.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: AppColors.borderColor),
+                            borderRadius: BorderRadius.circular(15),
+                            color: crntState is HomeScreenLoaded &&
+                                    state.isCheckedIn
+                                ? Colors.green
+                                : Colors.red.shade800,
+                          ),
+                          child: Align(
+                            alignment: crntState is HomeScreenLoaded &&
+                                    state.isCheckedIn
+                                ? Alignment.centerRight
+                                : Alignment.centerLeft,
+                            child: Container(
+                              width: 16.0,
+                              height: 16.0,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: crntState is HomeScreenLoaded &&
+                                        state.isCheckedIn
+                                    ? Colors.greenAccent
+                                    : Colors.redAccent,
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  )
+                ],
+              ),
+            ],
+          ),
+        );
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutteremployeemanagement/src/presentation/dialogs/info_alert_dialog.dart';
 
 import '../../../../core/colors/app_colors.dart';
 import '../../../../core/constants/navigation_constants.dart';
@@ -157,27 +158,12 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             onTap: () {
-                              showDialog(
+                              showInfoAlertDialog(
                                 context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: const Text("Forgot Password"),
-                                    content: SingleChildScrollView(
-                                      child: Column(
-                                        children: [
-                                          const Text(
-                                              "It'll be implemented later"),
-                                          const SizedBox(height: 24.0),
-                                          ElevatedButton(
-                                            onPressed: () {
-                                              NavigationHelper.goBack(context);
-                                            },
-                                            child: const Text("OKAY"),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                title: "Forgot Password",
+                                description: "It'll be implemented later",
+                                onTap: () {
+                                  NavigationHelper.goBack(context);
                                 },
                               );
                             },

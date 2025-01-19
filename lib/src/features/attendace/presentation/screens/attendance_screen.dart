@@ -87,6 +87,19 @@ class AttendanceScreen extends StatelessWidget {
                         } else if (state is AttendanceFailure) {
                           return Text('Error: ${state.failure}');
                         } else if (state is AttendanceLoaded) {
+                          if (state.employeeAttendanceList != null &&
+                              state.employeeAttendanceList!.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No attendance data found\nFor ${state.months[state.selectedMonthIndex!]} month',
+                                style: const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimaryColor,
+                                ),
+                              ),
+                            );
+                          }
                           return Expanded(
                             child: ListView.builder(
                               itemCount:

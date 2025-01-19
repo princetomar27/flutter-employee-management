@@ -3,24 +3,36 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../../core/colors/app_colors.dart';
+import '../../../../core/constants/navigation_constants.dart';
+import '../../../../presentation/dialogs/info_alert_dialog.dart';
 import '../../../../presentation/paddings.dart';
 
 class HomeScreenMenuCardItem extends StatelessWidget {
   final IconData iconPath;
   final String title;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const HomeScreenMenuCardItem({
     Key? key,
     required this.iconPath,
     required this.title,
-    required this.onTap,
+    this.onTap,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: onTap ??
+          () {
+            showInfoAlertDialog(
+              context: context,
+              title: "Feature In-Progress",
+              description: "This feature is to be implemented",
+              onTap: () {
+                NavigationHelper.goBack(context);
+              },
+            );
+          },
       child: Card(
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
