@@ -37,4 +37,15 @@ class CheckOutParams implements APIRouter {
 
   @override
   Map<String, String>? get queryParams => null;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'userId': userId,
+      'checkInId': checkInId,
+      'latitude': latitude,
+      'longitude': longitude,
+      'location': location,
+      'distance': distance,
+    };
+  }
 }

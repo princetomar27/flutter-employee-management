@@ -2,15 +2,18 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../../../core/storage/storage_helper.dart';
 import '../../../authentication/data/entities/user_login_entity.dart';
+import '../../data/entities/check_in_entity.dart';
 import '../../data/entities/check_in_params.dart';
 import '../../data/entities/check_out_params.dart';
 import '../../data/entities/location_entity.dart';
+import '../../data/entities/location_track_entity_params.dart';
 import '../../data/repository/home_repository.dart';
 
 part 'home_screen_state.dart';
@@ -96,7 +99,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
         userId: '${currentState.userProfile?.userId}',
         latitude: '${currentState.location.latitude}',
         longitude: '${currentState.location.longitude}',
-        location: currentState.location.address,
+        locationAddress: currentState.location.address,
       );
 
       final result = await homeRepository.checkInUser(checkInParams);
@@ -112,6 +115,9 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
                 userProfile: state.userProfile,
               ),
             );
+            trackUserLocation(checkInData: checkInResult);
+            debugPrint(
+                "${jsonEncode(checkInParams.toJson())}\n ${jsonEncode(checkInResult)}");
           }
         },
       );
@@ -174,7 +180,32 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
               userProfile: state.userProfile,
             ),
           );
+          debugPrint(
+              "${jsonEncode(checkOutParams.toJson())}\n ${jsonEncode(checkOutResult)}");
         },
+      );
+    }
+  }
+
+  Future<void> trackUserLocation({
+    required CheckInEntity checkInData,
+  }) async {
+    if (state is HomeScreenLoaded) {
+      final currentState = state as HomeScreenLoaded;
+      LocationTrackParams locationTrackParams = LocationTrackParams(
+        userId: currentState.userProfile?.userId ?? '',
+        checkInId: checkInData.checkInId,
+        latitude: '${currentState.location.latitude}',
+        longitude: '${currentState.location.longitude}',
+        locationAddress: currentState.location.address,
+      );
+
+      final result =
+          await homeRepository.trackUserLocation(locationTrackParams);
+
+      result.fold(
+        (failure) => null,
+        (locationSuccess) => emit(currentState),
       );
     }
   }

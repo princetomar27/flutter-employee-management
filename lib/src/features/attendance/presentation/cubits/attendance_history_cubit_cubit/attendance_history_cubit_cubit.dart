@@ -8,18 +8,26 @@ import '../../../data/repository/attendance_repository.dart';
 
 part 'attendance_history_cubit_state.dart';
 
-class AttendanceHistoryCubitCubit extends Cubit<AttendanceHistoryCubitState> {
+class AttendanceHistoryCubit extends Cubit<AttendanceHistoryState> {
   final String userId;
   final String attendanceId;
   final AttendanceRepository attendanceRepository;
-  AttendanceHistoryCubitCubit({
+  AttendanceHistoryCubit({
     required this.userId,
     required this.attendanceId,
     required this.attendanceRepository,
-  }) : super(AttendanceHistoryCubitInitial());
+  }) : super(
+          const AttendanceHistoryInitial(
+            selectedAttendanceHistoryRecord: null,
+          ),
+        );
 
   Future<void> fetchAttendanceHistoryList() async {
-    emit(AttendanceHistoryCubitLoading());
+    emit(
+      AttendanceHistoryLoading(
+        selectedAttendanceHistoryRecord: state.selectedAttendanceHistoryRecord,
+      ),
+    );
     final result = await attendanceRepository.fetchAttendanceHistoryList(
       AttendanceHistoryRecordParams(
         userId: userId,
@@ -29,11 +37,16 @@ class AttendanceHistoryCubitCubit extends Cubit<AttendanceHistoryCubitState> {
 
     result.fold(
       (failure) => emit(
-        AttendanceHistoryCubitFailure(failure: failure),
+        AttendanceHistoryFailure(
+          failure: failure,
+          selectedAttendanceHistoryRecord:
+              state.selectedAttendanceHistoryRecord,
+        ),
       ),
       (attendanceHistoryList) => emit(
-        AttendanceHistoryCubitLoaded(
+        AttendanceHistoryLoaded(
           attendanceHistoryList: attendanceHistoryList,
+          selectedAttendanceHistoryRecord: attendanceHistoryList.first,
         ),
       ),
     );

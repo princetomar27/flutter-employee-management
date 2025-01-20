@@ -25,18 +25,18 @@ class CheckInEntity extends Equatable {
       ];
 
   factory CheckInEntity.fromJson(Map<String, dynamic> json) {
-    final checkInList = json['checkIn'] as List<dynamic>?;
+    final checkInList = json['checkIn'];
     if (checkInList == null || checkInList.isEmpty) {
-      throw FormatException('Invalid or missing check-in data');
+      throw const FormatException('Invalid or missing check-in data');
     }
 
-    final checkIn = checkInList.first as Map<String, dynamic>;
+    final checkIn = checkInList.first;
     return CheckInEntity(
-      userId: checkIn['userId'].toString(),
-      checkInId: checkIn['checkInId'].toString(),
-      checkInDate: checkIn['checkInDate'].toString(),
-      checkInTime: checkIn['checkInTime'].toString(),
-      status: (checkIn['status'] as num).toInt(),
+      userId: checkIn['userId'],
+      checkInId: checkIn['checkInId'],
+      checkInDate: checkIn['checkInDate'],
+      checkInTime: checkIn['checkInTime'],
+      status: checkIn['status'],
     );
   }
 

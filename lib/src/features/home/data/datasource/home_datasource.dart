@@ -13,6 +13,7 @@ import '../entities/check_in_params.dart';
 import '../entities/check_out_entity.dart';
 import '../entities/check_out_params.dart';
 import '../entities/location_entity.dart';
+import '../entities/location_track_entity_params.dart';
 
 abstract class HomeDatasource {
   Future<Either<Failure, LocationEntity>> getCurrentLocation();
@@ -20,6 +21,9 @@ abstract class HomeDatasource {
   Future<Either<Failure, CheckInEntity>> checkInUser(CheckInParams params);
 
   Future<Either<Failure, CheckOutEntity>> checkOutUser(CheckOutParams params);
+
+  Future<Either<Failure, LocationTrackEntity>> trackUserLocation(
+      LocationTrackParams params);
 }
 
 class HomeDatasourceImpl implements HomeDatasource {
@@ -116,6 +120,34 @@ class HomeDatasourceImpl implements HomeDatasource {
         } else {
           return Left(UserNotExistFailure(
               message: data?['message'] ?? 'Unknown error'));
+        }
+      } else {
+        return Left(ServerFailure(
+            message:
+                'Check-In failed with status code: ${response.statusCode}'));
+      }
+    } catch (e) {
+      debugPrint("Error: $e");
+      return Left(ServerFailure(message: 'Check-In request failed: $e'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, LocationTrackEntity>> trackUserLocation(
+      LocationTrackParams params) async {
+    try {
+      final response = await apiClient.postRequest(params);
+
+      debugPrint("Response body: ${response.body}");
+
+      if (response.statusCode == 200) {
+        final data = _parseJson(response.body);
+
+        if (data != null) {
+          return Right(LocationTrackEntity.fromJson(data));
+        } else {
+          return Left(
+              ServerFailure(message: data?['message'] ?? 'Unknown error'));
         }
       } else {
         return Left(ServerFailure(

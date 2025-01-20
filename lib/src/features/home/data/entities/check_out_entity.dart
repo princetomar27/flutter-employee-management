@@ -22,25 +22,19 @@ class CheckOutEntity extends Equatable {
       ];
 
   factory CheckOutEntity.fromJson(Map<String, dynamic> json) {
-    final checkOutData = json['checkOut'] as List?;
-    final status = json['status'] ?? 0;
+    final checkOutData = json['checkOut'];
 
     if (checkOutData == null || checkOutData.isEmpty) {
-      return CheckOutEntity(
-        userId: '',
-        checkOutDate: '',
-        checkOutTime: '',
-        status: status,
-      );
+      throw const FormatException('Invalid or missing check-out data');
     }
 
     final checkOut = checkOutData.isNotEmpty ? checkOutData[0] : {};
 
     return CheckOutEntity(
-      userId: checkOut['userId'] ?? '',
-      checkOutDate: checkOut['checkOutDate'] ?? '',
-      checkOutTime: checkOut['checkOutTime'] ?? '',
-      status: checkOut['status'] ?? 0,
+      userId: checkOut['userId'],
+      checkOutDate: checkOut['checkOutDate'],
+      checkOutTime: checkOut['checkOutTime'],
+      status: checkOut['status'],
     );
   }
 
