@@ -73,8 +73,6 @@ class HomeDatasourceImpl implements HomeDatasource {
     try {
       final response = await apiClient.postRequest(params);
 
-      debugPrint("Response body: ${response.body}");
-
       if (response.statusCode == 200) {
         final data = _parseJson(response.body);
 
@@ -110,8 +108,6 @@ class HomeDatasourceImpl implements HomeDatasource {
     try {
       final response = await apiClient.postRequest(params);
 
-      debugPrint("Response body: ${response.body}");
-
       if (response.statusCode == 200) {
         final data = _parseJson(response.body);
 
@@ -137,8 +133,6 @@ class HomeDatasourceImpl implements HomeDatasource {
       LocationTrackParams params) async {
     try {
       final response = await apiClient.postRequest(params);
-
-      debugPrint("Response body: ${response.body}");
 
       if (response.statusCode == 200) {
         final data = _parseJson(response.body);
