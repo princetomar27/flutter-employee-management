@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/colors/app_colors.dart';
 import '../../../../core/injector/injection_container.dart';
 import '../../../../presentation/paddings.dart';
-import '../cubit/attendance_cubit.dart';
+import '../cubits/attendance_cubit/attendance_cubit.dart';
 import 'widgets/attendance_card_widget.dart';
 
 class AttendanceScreen extends StatelessWidget {

@@ -4,12 +4,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../../../core/errors/failures.dart';
-import '../../../../core/storage/storage_helper.dart';
-import '../../../authentication/data/entities/user_login_entity.dart';
-import '../../data/entities/attendance_entity.dart';
-import '../../data/entities/attendance_params.dart';
-import '../../data/repository/attendance_repository.dart';
+import '../../../../../core/errors/failures.dart';
+import '../../../../../core/storage/storage_helper.dart';
+import '../../../../authentication/data/entities/user_login_entity.dart';
+import '../../../data/entities/attendance_entity.dart';
+import '../../../data/entities/attendance_params.dart';
+import '../../../data/repository/attendance_repository.dart';
 
 part 'attendance_state.dart';
 

@@ -5,7 +5,7 @@ import '../../../../core/colors/app_colors.dart';
 import '../../../../core/constants/navigation_constants.dart';
 import '../../../../core/injector/injection_container.dart';
 import '../../../../presentation/paddings.dart';
-import '../../../attendace/presentation/screens/attendance_screen.dart';
+import '../../../attendance/presentation/screens/attendance_screen.dart';
 import '../cubit/home_screen_cubit.dart';
 import '../widgets/home_screen_card_widget.dart';
 import '../widgets/home_screen_menu_card_item_widget.dart';

@@ -1,8 +1,8 @@
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 
-import '../../features/attendace/data/datasource/attendance_datasource.dart';
-import '../../features/attendace/data/repository/attendance_repository.dart';
+import '../../features/attendance/data/datasource/attendance_datasource.dart';
+import '../../features/attendance/data/repository/attendance_repository.dart';
 import '../../features/authentication/data/datasource/authentication_datasource.dart';
 import '../../features/authentication/data/repository/authentication_repository.dart';
 import '../../features/home/data/datasource/home_datasource.dart';
