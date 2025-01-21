@@ -22,6 +22,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
   final HomeRepository homeRepository;
 
   Timer? _timer;
+  Timer? _locationTrackingTimer;
 
   HomeScreenCubit({
     required this.homeRepository,
@@ -115,7 +116,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
                 userProfile: state.userProfile,
               ),
             );
-            trackUserLocation(checkInData: checkInResult);
+            _startLocationTracking(checkInData: checkInResult);
             debugPrint(
                 "${jsonEncode(checkInParams.toJson())}\n ${jsonEncode(checkInResult)}");
           }
@@ -128,7 +129,6 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
     if (state is HomeScreenLoaded) {
       final currentState = state as HomeScreenLoaded;
 
-      // Fetch checkIn Data from storage helper
       final checkedInData = await StorageHelper.getCheckInData();
       if (checkedInData == null) {
         return;
@@ -171,6 +171,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
       result.fold(
         (failure) => null,
         (checkOutResult) {
+          _locationTrackingTimer?.cancel();
           StorageHelper.clearUserCheckInData();
 
           emit(
@@ -208,5 +209,15 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
         (locationSuccess) => emit(currentState),
       );
     }
+  }
+
+  void _startLocationTracking({required CheckInEntity checkInData}) {
+    _locationTrackingTimer?.cancel();
+    _locationTrackingTimer = Timer.periodic(
+      const Duration(minutes: 30),
+      (timer) {
+        trackUserLocation(checkInData: checkInData);
+      },
+    );
   }
 }
