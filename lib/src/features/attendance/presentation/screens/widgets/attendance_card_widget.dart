@@ -1,12 +1,12 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutteremployeemanagement/src/presentation/dialogs/info_alert_dialog.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/colors/app_colors.dart';
 import '../../../../../core/constants/navigation_constants.dart';
 import '../../../data/entities/attendance_entity.dart';
+import 'attendance_track_history_widget.dart';
 
 class AttendanceCardWidget extends StatelessWidget {
   final AttendanceEntity attendance;
@@ -82,18 +82,20 @@ class AttendanceCardWidget extends StatelessWidget {
               _AttendanceInfoWidget(
                   title: "Total Hours", value: attendance.duration),
               InkWell(
-                  onTap: () {
-                    showInfoAlertDialog(
-                      context: context,
-                      title: "Feature In-Progress",
-                      description: "This feature is to be implemented",
-                      onTap: () {
-                        NavigationHelper.goBack(context);
-                      },
-                    );
-                  },
-                  child: const _AttendanceInfoWidget(
-                      title: "View Map", value: "")),
+                onTap: () {
+                  NavigationHelper.navigateTo(
+                    context,
+                    AttendanceTrackHistoryWidget(
+                      attendanceId: attendance.attendeceCode,
+                      checkInTime: attendance.checkIn,
+                    ),
+                  );
+                },
+                child: const _AttendanceInfoWidget(
+                  title: "View Map",
+                  value: "",
+                ),
+              ),
             ],
           ),
         ),

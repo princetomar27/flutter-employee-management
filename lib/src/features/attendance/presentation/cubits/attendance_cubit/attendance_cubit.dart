@@ -80,7 +80,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
         try {
           final checkInDate =
               DateFormat('dd-MM-yyyy HH:mm').parse(attendance.checkIn);
-          return checkInDate.month == month;
+          return checkInDate.month == month + 1;
         } catch (e) {
           return false;
         }
@@ -91,7 +91,7 @@ class AttendanceCubit extends Cubit<AttendanceState> {
           employeeAttendanceList: filteredAttendance,
           attendanceList: loadedState.attendanceList,
           months: loadedState.months,
-          selectedMonthIndex: month,
+          selectedMonthIndex: month + 1,
         ),
       );
     }

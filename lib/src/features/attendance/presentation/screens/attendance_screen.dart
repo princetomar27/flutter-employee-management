@@ -63,7 +63,7 @@ class AttendanceScreen extends StatelessWidget {
                               cubit.filterAttendanceByMonth(monthIndex);
                             },
                             value: state.selectedMonthIndex != null
-                                ? state.months[state.selectedMonthIndex!]
+                                ? state.months[state.selectedMonthIndex! - 1]
                                 : null,
                             elevation: 0,
                             padding: const EdgeInsets.symmetric(horizontal: 8),
@@ -91,7 +91,7 @@ class AttendanceScreen extends StatelessWidget {
                               state.employeeAttendanceList!.isEmpty) {
                             return Center(
                               child: Text(
-                                'No attendance data found\nFor ${state.months[state.selectedMonthIndex!]} month',
+                                'No attendance data found\nFor ${state.months[state.selectedMonthIndex! - 1]} month',
                                 style: const TextStyle(
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold,

@@ -32,6 +32,13 @@
 	<string>We use your location to show relevant content.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>We need access to your location to provide location-based features.</string>
+	<key>GMSApiKey</key>
+	<string>Your-API-Key-Here</string>
+	 <key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>googlechromes</string>
+		<string>comgooglemaps</string>
+	</array>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
