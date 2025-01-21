@@ -177,7 +177,7 @@ class HomeScreenCubit extends Cubit<HomeScreenState> {
           emit(
             currentState.copyWith(
               currentDateTime: DateTime.now(),
-              isCheckedIn: !currentState.isCheckedIn,
+              isCheckedIn: false,
               userProfile: state.userProfile,
             ),
           );
