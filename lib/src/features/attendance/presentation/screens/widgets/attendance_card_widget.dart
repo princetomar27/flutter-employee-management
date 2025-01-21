@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutteremployeemanagement/src/presentation/paddings.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../../core/colors/app_colors.dart';
@@ -38,15 +39,14 @@ class AttendanceCardWidget extends StatelessWidget {
     final dayOfMonth = checkInDate.day;
 
     return SizedBox(
-      height: 100,
+      height: 85,
       child: Card(
         color: AppColors.attendanceTileColor,
         child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+          contentPadding: const EdgeInsets.all(8),
           leading: Container(
-            height: 60,
-            width: 60,
+            height: 45,
+            width: 45,
             padding: const EdgeInsets.symmetric(vertical: 6),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -56,7 +56,7 @@ class AttendanceCardWidget extends StatelessWidget {
               Text(
                 dayOfMonth.toString(),
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 16,
                   color: AppColors.textSecondaryColor,
                   fontWeight: FontWeight.w600,
                 ),
@@ -64,7 +64,7 @@ class AttendanceCardWidget extends StatelessWidget {
               Text(
                 dayOfWeek,
                 style: const TextStyle(
-                  fontSize: 14,
+                  fontSize: 12,
                   color: AppColors.textSecondaryColor,
                   fontWeight: FontWeight.w500,
                 ),
@@ -77,10 +77,13 @@ class AttendanceCardWidget extends StatelessWidget {
             children: [
               _AttendanceInfoWidget(
                   title: "Punch In", value: checkInFormattedTime),
+              padding4,
               _AttendanceInfoWidget(
                   title: "Punched Out", value: checkOutFormattedTime),
+              padding4,
               _AttendanceInfoWidget(
                   title: "Total Hours", value: attendance.duration),
+              padding4,
               InkWell(
                 onTap: () {
                   NavigationHelper.navigateTo(
@@ -134,19 +137,20 @@ class _AttendanceInfoWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
           value,
           style: const TextStyle(
-            fontSize: 13,
+            fontSize: 12,
             color: AppColors.textPrimaryColor,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           title,
-          style: const TextStyle(fontSize: 12, color: AppColors.greyColor),
+          style: const TextStyle(fontSize: 10, color: AppColors.greyColor),
         ),
       ],
     );

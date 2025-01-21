@@ -95,10 +95,10 @@ class _HomeScreenCardSubWidget extends StatelessWidget {
                     value: address,
                   ),
                   padding8,
-                  const _HomeScreenCardSubDetailsWidget(
+                  _HomeScreenCardSubDetailsWidget(
                     icon: Icons.login,
                     title: "Check-In",
-                    value: "",
+                    value: state.isCheckedIn ? "Yes" : "",
                   )
                 ],
               ),
